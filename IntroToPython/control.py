@@ -10,11 +10,9 @@ EPICENTER_RADIUS = 100
 
 # loads the data file
 def load_data(filename) -> list[Point]:
-    line_number = 0
     points = []
     with open(filename, encoding="utf-8") as f:
-        for line in f:
-            line_number += 1
+        for line_number, line in enumerate(f, start=1):
             if line_number == 1:
                 # Skip header: Name\tX\tY
                 continue
