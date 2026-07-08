@@ -1,7 +1,9 @@
 from pathlib import Path
-import random
-import numpy
 from point import Point
+
+# Given a list of 2D Points, loaded from a DATA_FILE, print to the console
+# the triplets of Points which are forming isoscelles triangles.
+# Each Point is a line in DATA_FILE and it contains a name and the x,y coordinates
 
 DATA_FILE = Path(__file__).with_name("shapes.tsv")
 
@@ -21,7 +23,7 @@ def load_data(filename) -> list[Point]:
 
 # create a map of segments: { distance : [{p1, p2},..] }
 # the segment is a set since set operations are going to be needed later
-def map_segments(points):
+def map_segments(points) -> dict[float, list[set[Point]]]:
     segments_map = {}
     n = len(points)
     for i in range(n):
@@ -36,7 +38,7 @@ def map_segments(points):
 
 # create a map of isocelles triangles: { distance, [[p1, p2, p3],..] }
 # the vertex common to the two equal sides is the first in the triangle
-def map_triangles(distances):
+def map_triangles(distances) -> dict[float, list[list[Point]]]:
     triangles_map = {}
     for distance, segments in distances.items():
         triangles = []
@@ -53,17 +55,13 @@ def map_triangles(distances):
             triangles_map[distance] = triangles
     return triangles_map
 
-def triangle_str(triangle):
-    return(f"<{triangle[0]._name} {triangle[1]._name} {triangle[2]._name}>")
-
 # Main entry point in the program
 if __name__ == "__main__":
     points = load_data(DATA_FILE)
     segments = map_segments(points)
     triangles = map_triangles(segments)
-
-    for distance, triangles in triangles.items():
-        print(distance, end=" : ")
-        for triangle in triangles:
-            print(triangle_str(triangle), end=" ")
-        print()
+    isoscelles = []
+    for triangles in triangles.values():
+        isoscelles.extend(triangles)
+    for i, triangle in enumerate(isoscelles):
+        print(f"{i+1:<2d} > {triangle[0]._name} {triangle[1]._name} {triangle[2]._name}")
