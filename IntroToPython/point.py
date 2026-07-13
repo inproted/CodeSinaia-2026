@@ -28,11 +28,14 @@ class Point:
 		"""
 		Returns a debug string of the object. I.e: "P(x=1, y=2)"
 		"""
-		return f"{self._name}=(x={self._x}, y={self._y})"
+		return f"{self._name}(x={self._x}, y={self._y})"
 
 	# Called for == to compare two Point objects by their coordinates.
 	def __eq__(self, other):
 		return self._x == other._x and self._y == other._y if isinstance(other, Point) else False
+
+	def __hash__(self):
+		return hash(self._name)
 
 	# Compute straight line distance to another point.
 	def distance(self, other) -> int:
